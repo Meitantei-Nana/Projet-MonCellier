@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Caviste</title>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="">
+                <img src="Images/Vin_TV_logo.png" alt="" width="30" height="24">
+                Caviste
+            </a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-light">
+        <div class="container">
+            <form class="row g-3">
+
+                <div class="col-auto">
+                    <label for="inputPassword2" class="visually-hidden"></label>
+                    <input type="text" class="form-control" id="inputPassword2" placeholder="Enter keyWord here...">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success mb-3">Search</button>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" id="pays" aria-label="Default select example">
+                        <option selected>All Countries</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>All years</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        Bloke Nine
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">Bodega Lurton</a>
+                    <a href="#" class="list-group-item list-group-item-action">Château De Saint Cosme</a>
+                    <a href="#" class="list-group-item list-group-item-action">Château Le Doyenne</a>
+                    <a href="#" class="list-group-item list-group-item-action">Domaine Du Bouscat</a>
+                    <a href="#" class="list-group-item list-group-item-action">Domaine Serene</a>
+                    <a href="#" class="list-group-item list-group-item-action">Lan Rioja Crianza</a>
+                    <a href="#" class="list-group-item list-group-item-action">Les Morizottes</a>
+                    <a href="#" class="list-group-item list-group-item-action">Margerum Sybarite</a>
+                    <a href="#" class="list-group-item list-group-item-action">Owen Roe "Ex Umbris"</a>
+                    <a href="#" class="list-group-item list-group-item-action">Rex Hill</a>
+                    <a href="#" class="list-group-item list-group-item-action">Viticcio Classico Riserva</a>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col p-1">
+                        <img src="Images/vin.jpg" alt="">
+                    </div>
+                    <div class="col">
+                        <div class="row">#9</div>
+                        <div class="row"><strong>Grapes :</strong></div>
+                        <div class="row"><strong>Country :</strong></div>
+                        <div class="row"><strong>Region :</strong></div>
+                        <div class="row"><strong>Year :</strong></div>
+                        <div class="row"><strong>Capacity :</strong></div>
+                        <div class="row"><strong>Color :</strong></div>
+                        <div class="row"><strong>Price :</strong></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                aria-selected="true">Description</button>
+                            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                                aria-selected="false">Commentaires</button>
+                            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
+                                aria-selected="false">Notes personnelles</button>
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                            aria-labelledby="nav-home-tab">...</div>
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            ...</div>
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            ...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="api.js"></script>
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
