@@ -1,5 +1,18 @@
 var urlbase = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/";
 
+const btSearch = document.getElementById('btSearch');
+
+btSearch.addEventListener('click', function (e){
+    refreshVins();
+});
+
+const btfiltre = document.getElementById('btFiltre');
+
+btSearch.addEventListener('click', function (e){
+    refreshVins('filtre'); 
+});
+
+
 /*
 $.ajax({
     method: "GET",
@@ -15,7 +28,7 @@ $.ajax({
         $("#pays").append(option);
     });
 });
-c*/
+*/
 
 // Fonction d'appel des API
 function api(url, methode = 'GET', donnees = null) {
@@ -58,8 +71,8 @@ reqVins.done(function (vins) {
         var listeVins = '<a href="#" class="list-group-item list-group-item-action">' + val.name + '</a>'
         $("#vins").append(listeVins);
     });
-});*/
-
+});
+*/
 // Fonction d'actualisation de la liste des vins
 function refreshVins(action="search") {
     // efface le contenu

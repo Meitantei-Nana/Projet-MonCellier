@@ -42,8 +42,10 @@
                     <input type="text" class="form-control" id="searchVins" placeholder="Enter keyWord here...">
                 </div>
                 <div class="col-auto">
-                    <button type="submit" onclick="refreshVins();" class="btn btn-success mb-3">Search</button>
+                    <button type="button" id="btSearch" class="btn btn-success mb-3">Search</button>
                 </div>
+            </form>
+            <form class="row g-3">
                 <div class="col-auto">
                     <select class="form-select" id="pays" aria-label="Default select example">
                         <option selected>All Countries</option>
@@ -68,7 +70,7 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" onclick="refreshVins('filtre');" class="btn btn-primary">Filter</button>
+                    <button id="btFiltre" type="button" class="btn btn-primary">Filter</button>
                 </div>
 
             </form>
