@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
     <title>Caviste</title>
 </head>
 
@@ -19,7 +19,7 @@
         <div class="container">
             <a class="navbar-brand" href="">
                 <img src="Images/Vin_TV_logo.png" alt="" width="30" height="24">
-                Caviste
+                <strong><i>Caviste</i></strong>
             </a>
             <ul class="nav justify-content-end">
                 <li class="nav-item">
@@ -39,10 +39,10 @@
 
                 <div class="col-auto">
                     <label for="inputPassword2" class="visually-hidden"></label>
-                    <input type="text" class="form-control" id="inputPassword2" placeholder="Enter keyWord here...">
+                    <input type="text" class="form-control" id="searchVins" placeholder="Enter keyWord here...">
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-success mb-3">Search</button>
+                    <button type="submit" onclick="refreshVins();" class="btn btn-success mb-3">Search</button>
                 </div>
                 <div class="col-auto">
                     <select class="form-select" id="pays" aria-label="Default select example">
@@ -50,12 +50,25 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>All years</option>
+                    <select id="annee" class="form-select" aria-label="Default select example">
+                        <option value="" selected>All years</option>
+                        <option value="1995"> 1995</option>
+                        <option value="2004"> 2004</option>
+                        <option value="2005"> 2005</option>
+                        <option value="2006"> 2006</option>
+                        <option value="2007"> 2007</option>
+                        <option value="2009"> 2009 </option>
+                        <option value="2010"> 2010</option>
+                        <option value="2011"> 2011</option>
+                        <option value="2013"> 2013</option>
+                        <option value="2018"> 2018</option>
+                        <option value="2020"> 2020</option>
+                        <option value="2022"> 2022</option>
+
                     </select>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit" onclick="refreshVins('filtre');" class="btn btn-primary">Filter</button>
                 </div>
 
             </form>
@@ -65,44 +78,67 @@
     <div class="container">
         <div class="row">
             <div class="col-4">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                        Bloke Nine
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">Bodega Lurton</a>
-                    <a href="#" class="list-group-item list-group-item-action">Château De Saint Cosme</a>
-                    <a href="#" class="list-group-item list-group-item-action">Château Le Doyenne</a>
-                    <a href="#" class="list-group-item list-group-item-action">Domaine Du Bouscat</a>
-                    <a href="#" class="list-group-item list-group-item-action">Domaine Serene</a>
-                    <a href="#" class="list-group-item list-group-item-action">Lan Rioja Crianza</a>
-                    <a href="#" class="list-group-item list-group-item-action">Les Morizottes</a>
-                    <a href="#" class="list-group-item list-group-item-action">Margerum Sybarite</a>
-                    <a href="#" class="list-group-item list-group-item-action">Owen Roe "Ex Umbris"</a>
-                    <a href="#" class="list-group-item list-group-item-action">Rex Hill</a>
-                    <a href="#" class="list-group-item list-group-item-action">Viticcio Classico Riserva</a>
+                <div class="list-group" id="vins">
+
                 </div>
             </div>
             <div class="col-8">
                 <div class="row">
                     <div class="col p-1">
-                        <img src="Images/vin.jpg" alt="">
+                        <img id="picture" src="Images/vin.jpg" width="auto" height="400" alt="">
                     </div>
                     <div class="col">
-                        <div class="row">#9</div>
-                        <div class="row"><strong>Grapes :</strong></div>
-                        <div class="row"><strong>Country :</strong></div>
-                        <div class="row"><strong>Region :</strong></div>
-                        <div class="row"><strong>Year :</strong></div>
-                        <div class="row"><strong>Capacity :</strong></div>
-                        <div class="row"><strong>Color :</strong></div>
-                        <div class="row"><strong>Price :</strong></div>
+
+                        <table class="table table-striped table-hover">
+                            <tr>
+                                <td id="id"></td>
+                                <td id="name"></td>
+                            </tr>
+                            <tr>
+                                <td>Grapes</td>
+                                <td id="grapes"></td>
+                            </tr>
+                            <tr>
+                                <td>Country</td>
+                                <td id="country"></td>
+                            </tr>
+                            <tr>
+                                <td>Region</td>
+                                <td id="region"></td>
+                            </tr>
+                            <tr>
+                                <td>Year</td>
+                                <td id="year"></td>
+                            </tr>
+                            <tr>
+                                <td>Capacity</td>
+                                <td id="capacity"></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td id="color"></td>
+                            </tr>
+                            <tr>
+                                <td>Price</td>
+                                <td id="price"></td>
+                            </tr>
+                        </table>
+
+                        <div class="row mt-3">
+                            <div class="col-12 d-flex justify-content-end">
+                                <span class="me-2">❤️ Like this wine</span>
+                                <button type="button" class="btn btn-light btn-sm me-2">
+                                    ❤️ Like
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                                data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                                data-bs-target="#description" type="button" role="tab" aria-controls="nav-home"
                                 aria-selected="true">Description</button>
                             <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
                                 data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
@@ -113,10 +149,19 @@
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                        <div class="tab-pane fade show active" id="description" role="tabpanel"
                             aria-labelledby="nav-home-tab">...</div>
                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            ...</div>
+                            <textarea name="comment" id="comment" cols="" rows="5">
+
+                            </textarea>
+                            <div class="row p-2">
+                                <button class="btn btn-success p-2 col-2">Ajouter</button>
+                                <button class="btn btn-secondary p-2 col-2">Modifier</button>
+                                <button class="btn btn-danger p-2 col-2">Supprimer</button>
+
+                            </div>
+                        </div>
                         <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
                             ...</div>
                     </div>
@@ -134,13 +179,22 @@
 
 
 
+
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#comment'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
     <script src="api.js"></script>
+
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
