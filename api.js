@@ -2,14 +2,14 @@ var urlbase = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/";
 
 const btSearch = document.getElementById('btSearch');
 
-btSearch.addEventListener('click', function (e){
+btSearch.addEventListener('click', function (e) {
     refreshVins();
 });
 
 const btfiltre = document.getElementById('btFiltre');
 
-btSearch.addEventListener('click', function (e){
-    refreshVins('filtre'); 
+btSearch.addEventListener('click', function (e) {
+    refreshVins('filtre');
 });
 
 
@@ -30,7 +30,13 @@ $.ajax({
 });
 */
 
-// Fonction d'appel des API
+/**
+ * 
+ * @param {*} url partie d' url a ajouter a url de base
+ * @param {*} methode méthode http a utiliser
+ * @param {*} donnees données a envoyer avec la requete
+ * @returns retourne l' objet request qui contient la réponse de la requete 
+ */
 function api(url, methode = 'GET', donnees = null) {
     // url de base de l'API
     var urlbase = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/";
@@ -44,9 +50,55 @@ function api(url, methode = 'GET', donnees = null) {
     return request;
 }
 
+
+var grapeNames = new Set()
+/**
+ * récupere les noms de raisains dans un tableau sans doublon
+ */
+function recupererRaisains() {
+    reqgrapes = api("wines");
+
+    reqgrapes.done(function (vins) {
+        vins.forEach(function (vin) {
+            if (vin.grapes) {
+
+                var raisains = vin.grapes.split(',').map(function (raisain) {
+                    return raisain.trim();
+                });
+                raisains.forEach(function (raisain) {
+                    grapeNames.add(raisain);
+                })
+            }
+
+        });
+        console.log('grapes : ' + Array.from(grapeNames));
+    })
+}
+recupererRaisains();
+
+/*
+
+
+regrapes.done(vins => {
+    var typesRaisains = new Set();
+
+    $.each(vins, function (i, vin) {
+        if (vin.grapes) {
+            var raisains = vin.grapes.split(',');
+            raisains.array.forEach(function (raisain) {
+                typesRaisains.add(raisain.trim());
+            });
+        }
+    })
+    console.log(Array.from(typesDeRaisins));
+})
+*/
 // Pays
 var urlPays = "wines/countries";
 var reqPays = api(urlPays);
+/**
+ * réponse succes, ajout des pays dans la liste défilante du formulaire
+ */
 reqPays.done(function (pays) {
     //console.log(pays);
     $.each(pays, function (id, val) {
@@ -57,6 +109,9 @@ reqPays.done(function (pays) {
         $("#pays").append(option);
     });
 });
+
+
+
 
 // Filter
 
@@ -74,7 +129,13 @@ reqVins.done(function (vins) {
 });
 */
 // Fonction d'actualisation de la liste des vins
-function refreshVins(action="search") {
+
+/**
+ * gere l' affichage et la recherche de vins basé sur critere de filtrage ou sans.
+ * @param {*} action bouton déclencheur
+ */
+
+function refreshVins(action = "search") {
     // efface le contenu
     $("#vins").empty();
     // recuperation de la valeur du vins a rechercher
@@ -84,69 +145,120 @@ function refreshVins(action="search") {
     // url de l'API de recherche par Pays
     var pays = $("#pays").val();
     var annee = $("#annee").val();
+
     var paysFiltre = "wines?key=country&val=" + pays + "&sort=year";
 
-    var urlFinal =urlVins;
-    if (action=="filtre") {
+    var urlFinal = urlVins;
+    if (action == "filtre") {
         urlFinal = paysFiltre;
-    } 
-    console.log("annee",annee);
+    }
+    console.log("annee", annee);
     // lancement de la requete
     var reqVins = api(urlFinal);
     // recuperation et affichage des vins
     reqVins.done(function (vins) {
-        console.log("vins",vins);
+        console.log("vins", vins);
         $.each(vins, function (id, val) {
-            if(annee == "" ){
-                var listeVins = '<a href="#" onclick="afficheVin('+ val.id +')"  class="list-group-item list-group-item-action">' + val.name + '</a>'
+            /* récupere les noms de grapes selon le critere de recherche de vin entré, mais ce n est pas ca qui est demandé
+            if (val.grapes) {
+
+                var raisains = val.grapes.split(',');
+                raisains.forEach(function (raisain) {
+                    grapeNames.add(raisain.trim());
+
+                });
+                
+
+            }*/
+
+            if (annee == "") {
+                var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')"  class="list-group-item list-group-item-action">' + val.name + '</a>'
                 $("#vins").append(listeVins);
-            }else{
+
+            } else {
                 if (val.year === annee) {
-                    var listeVins = '<a href="#" onclick="afficheVin('+ val.id +')" class="list-group-item list-group-item-action">' + val.name + '</a>'
+                    var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')" class="list-group-item list-group-item-action">' + val.name + '</a>'
                     $("#vins").append(listeVins);
                 }
             }
         });
+
     });
 }
 
 // Remplissage des informations
-function afficheVin(id){
-    var urlV = "wines/"+id;
+var touslesvins = {};
+
+function afficheVin(id) {
+    var urlV = "wines/" + id;
     var pathImg = "https://cruth.phpnet.org/epfc/caviste/public/pics/";
     var reqV = api(urlV);
-    reqV.done(function(vins){
-        vin = vins[0];
-        console.log(vin);
-        $("#name").html(vin.name);
-        $("#grapes").html(vin.grapes);
-        $("#id").html("#"+vin.id);
-        $("#year").html(vin.year);
-        $("#country").html(vin.country);
-        $("#region").html(vin.region);
-        $("#description").html(vin.description);
-        $("#picture").attr('src',pathImg+vin.picture);
-        $("#price").html(vin.price);
-        $("#capacity").html(vin.capacity);
-        $("#color").html(vin.color);
-        $("#extra").html(vin.extra);
-    });
+    if (!touslesvins[id]) {
+        reqV.done(function (vins) {
+            vin = vins[0];
+            touslesvins[id] = vin;
+            console.log(vin);
+            $("#name").html(vin.name);
+            $("#grapes").html(vin.grapes);
+            $("#id").html("#" + vin.id);
+            $("#year").html(vin.year);
+            $("#country").html(vin.country);
+            $("#region").html(vin.region);
+            $("#description").html(vin.description);
+            $("#picture").attr('src', pathImg + vin.picture);
+            $("#price").html(vin.price);
+            $("#capacity").html(vin.capacity);
+            $("#color").html(vin.color);
+            $("#extra").html(vin.extra);
 
-/**
- * {
-    
-    "year": "2009",
-   
-    "country": "France",
-    "region": "Burgundy",
-    "description": "Breaking the mold of the classics, this offering will surprise and undoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Breaking the mold of the classics, this offering will surprise and\nundoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Sure to please the late-night crowd with the slight jolt of adrenaline it brings.",
-    "picture": "morizottes.jpg",
-    "price": "20.99",
-    "capacity": "75.00",
-    "color": "red",
-    "extra": null
+
+
+
+        });
+    } else {
+        var vin = touslesvins[id];
+
+    }
+
+
+    /**
+     * {
+        
+        "year": "2009",
+       
+        "country": "France",
+        "region": "Burgundy",
+        "description": "Breaking the mold of the classics, this offering will surprise and undoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Breaking the mold of the classics, this offering will surprise and\nundoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Sure to please the late-night crowd with the slight jolt of adrenaline it brings.",
+        "picture": "morizottes.jpg",
+        "price": "20.99",
+        "capacity": "75.00",
+        "color": "red",
+        "extra": null
+    }
+     */
 }
- */
-}
+
+
+
+
 
 // COnnexion
+/* remplir select
+function populateSelect() {
+  var selectElement = document.getElementById('cephage');
+
+  // Create an option for "All grapes"
+  var option = document.createElement('option');
+  option.value = '';
+  option.textContent = 'All grapes';
+  selectElement.appendChild(option);
+
+  // Create options for each grape
+  for (var i = 0; i < grapeNames.length; i++) {
+    var grape = grapeNames[i];
+    var option = document.createElement('option');
+    option.value = grape;
+    option.textContent = grape;
+    selectElement.appendChild(option);
+  }
+}*/
