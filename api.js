@@ -55,7 +55,7 @@ var grapeNames = new Set()
 /**
  * récupere les noms de raisains dans un tableau sans doublon
  */
-function recupererRaisains() {
+function recupererRaisainsApi() {
     reqgrapes = api("wines");
 
     reqgrapes.done(function (vins) {
@@ -71,28 +71,32 @@ function recupererRaisains() {
             }
 
         });
-        console.log('grapes : ' + Array.from(grapeNames));
+        ajouterraisainAuselect(grapeNames);
+
     })
 }
-recupererRaisains();
+recupererRaisainsApi();
+console.log(grapeNames);
 
-/*
 
+/**
+ * utilisation de jquery
+ * @param {*} raisains liste des raisain
+ */
+function ajouterraisainAuselect(raisins) {
+    var $selectCephage = $('#cephage');
 
-regrapes.done(vins => {
-    var typesRaisains = new Set();
+    $selectCephage.empty();
 
-    $.each(vins, function (i, vin) {
-        if (vin.grapes) {
-            var raisains = vin.grapes.split(',');
-            raisains.array.forEach(function (raisain) {
-                typesRaisains.add(raisain.trim());
-            });
-        }
-    })
-    console.log(Array.from(typesDeRaisins));
-})
-*/
+    $selectCephage.append($('<option>', { value: '', text: 'All grapes' }));
+
+    raisins.forEach(function (raisin) {
+        $selectCephage.append($('<option>', { value: raisin, text: raisin }));
+    });
+}
+
+ajouterraisainAuselect(grapeNames);
+
 // Pays
 var urlPays = "wines/countries";
 var reqPays = api(urlPays);
@@ -193,32 +197,27 @@ function afficheVin(id) {
     var urlV = "wines/" + id;
     var pathImg = "https://cruth.phpnet.org/epfc/caviste/public/pics/";
     var reqV = api(urlV);
-    if (!touslesvins[id]) {
-        reqV.done(function (vins) {
-            vin = vins[0];
-            touslesvins[id] = vin;
-            console.log(vin);
-            $("#name").html(vin.name);
-            $("#grapes").html(vin.grapes);
-            $("#id").html("#" + vin.id);
-            $("#year").html(vin.year);
-            $("#country").html(vin.country);
-            $("#region").html(vin.region);
-            $("#description").html(vin.description);
-            $("#picture").attr('src', pathImg + vin.picture);
-            $("#price").html(vin.price);
-            $("#capacity").html(vin.capacity);
-            $("#color").html(vin.color);
-            $("#extra").html(vin.extra);
+
+    reqV.done(function (vins) {
+        vin = vins[0];
+        console.log(vin);
+        $("#name").html(vin.name);
+        $("#grapes").html(vin.grapes);
+        $("#id").html("#" + vin.id);
+        $("#year").html(vin.year);
+        $("#country").html(vin.country);
+        $("#region").html(vin.region);
+        $("#description").html(vin.description);
+        $("#picture").attr('src', pathImg + vin.picture);
+        $("#price").html(vin.price);
+        $("#capacity").html(vin.capacity);
+        $("#color").html(vin.color);
+        $("#extra").html(vin.extra);
 
 
 
 
-        });
-    } else {
-        var vin = touslesvins[id];
-
-    }
+    });
 
 
     /**
