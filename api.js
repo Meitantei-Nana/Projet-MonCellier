@@ -203,6 +203,10 @@ function refreshVins(action = "search") {
 // Remplissage des informations
 var touslesvins = {};
 
+/**
+ * complete les détails du vin
+ * @param {*} id du vin
+ */
 function afficheVin(id) {
     var urlV = "wines/" + id;
     var pathImg = "https://cruth.phpnet.org/epfc/caviste/public/pics/";
@@ -248,26 +252,81 @@ function afficheVin(id) {
 }
 
 
+/**
+ * 
+ * @param {*} pageID 
+ */
+function chargercontenu(pageID) {
+    // Hide all content sections
+    const contentSections = $(".page-content");
+    contentSections.hide();
 
+    // Show the selected content section
+    const selectedContent = $("#" + pageID);
+    selectedContent.show();
+}
+
+$("#home").click(function () {
+    chargercontenu("home");
+});
+
+$("#about").click(function () {
+    chargercontenu("about");
+});
+
+$("#login").click(function () {
+    chargercontenu("login");
+});
+
+
+
+
+
+
+
+
+
+
+
+function estAuthentifie() {
+
+    return true;
+}
+
+
+
+
+
+$('.btn-action').click(function () {
+
+    if (estAuthentifie) {
+        var action = $(this).data('action');
+        switch (action) {
+            case 'ajouter':
+                console.log("Ajouter");
+
+                break;
+            case 'modifier':
+                console.log("Modifier");
+
+                break;
+            case 'supprimer':
+                console.log("Supprimer");
+                // Logique pour Supprimer
+
+                break;
+            default:
+                console.log("Action non reconnue");
+        }
+
+    } else {
+        $("#login").click(function () {
+            location.href = "#login";
+        });
+
+
+    }
+});
 
 
 // COnnexion
-/* remplir select
-function populateSelect() {
-  var selectElement = document.getElementById('cephage');
-
-  // Create an option for "All grapes"
-  var option = document.createElement('option');
-  option.value = '';
-  option.textContent = 'All grapes';
-  selectElement.appendChild(option);
-
-  // Create options for each grape
-  for (var i = 0; i < grapeNames.length; i++) {
-    var grape = grapeNames[i];
-    var option = document.createElement('option');
-    option.value = grape;
-    option.textContent = grape;
-    selectElement.appendChild(option);
-  }
-}*/

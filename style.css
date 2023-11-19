@@ -1,0 +1,11 @@
+.navbar-light .navbar-brand {
+    color: black;
+  }
+  
+  .nav-link.active {
+    background-color: #007bff;
+    color: beige;
+  }
+  .nav-link.active {
+    color: red;
+  }
