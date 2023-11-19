@@ -55,6 +55,7 @@ var grapeNames = new Set()
 /**
  * récupere les noms de raisains dans un tableau sans doublon
  */
+
 function recupererRaisainsApi() {
     reqgrapes = api("wines");
 
@@ -62,27 +63,27 @@ function recupererRaisainsApi() {
         vins.forEach(function (vin) {
             if (vin.grapes) {
 
-                var raisains = vin.grapes.split(',').map(function (raisain) {
-                    return raisain.trim();
+                var raisins = vin.grapes.split(',').map(function (raisin) {
+                    return raisin.trim();
                 });
-                raisains.forEach(function (raisain) {
-                    grapeNames.add(raisain);
+                raisins.forEach(function (raisin) {
+                    grapeNames.add(raisin);
                 })
             }
 
         });
+        console.log('grapes : ' + Array.from(grapeNames));
         ajouterraisainAuselect(grapeNames);
-
     })
 }
 recupererRaisainsApi();
-console.log(grapeNames);
 
 
 /**
  * utilisation de jquery
- * @param {*} raisains liste des raisain
+ * @param {*} raisins liste des raisain
  */
+var selectedCepage = '';
 function ajouterraisainAuselect(raisins) {
     var $selectCephage = $('#cephage');
 
@@ -92,8 +93,14 @@ function ajouterraisainAuselect(raisins) {
 
     raisins.forEach(function (raisin) {
         $selectCephage.append($('<option>', { value: raisin, text: raisin }));
+
+        console.log('selected'.$selectCephage);
+    });
+    $selectCephage.change(function () {
+        selectedCepage = $(this).val();
     });
 }
+
 
 ajouterraisainAuselect(grapeNames);
 
@@ -149,7 +156,9 @@ function refreshVins(action = "search") {
     // url de l'API de recherche par Pays
     var pays = $("#pays").val();
     var annee = $("#annee").val();
+    var cepage = $('#cephage').val();
 
+    console.log(cepage);
     var paysFiltre = "wines?key=country&val=" + pays + "&sort=year";
 
     var urlFinal = urlVins;
@@ -161,32 +170,33 @@ function refreshVins(action = "search") {
     var reqVins = api(urlFinal);
     // recuperation et affichage des vins
     reqVins.done(function (vins) {
-        console.log("vins", vins);
-        $.each(vins, function (id, val) {
-            /* récupere les noms de grapes selon le critere de recherche de vin entré, mais ce n est pas ca qui est demandé
-            if (val.grapes) {
+        // Filtrez par année et pays
 
-                var raisains = val.grapes.split(',');
-                raisains.forEach(function (raisain) {
-                    grapeNames.add(raisain.trim());
-
-                });
-                
-
-            }*/
-
-            if (annee == "") {
-                var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')"  class="list-group-item list-group-item-action">' + val.name + '</a>'
-                $("#vins").append(listeVins);
-
-            } else {
-                if (val.year === annee) {
-                    var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')" class="list-group-item list-group-item-action">' + val.name + '</a>'
-                    $("#vins").append(listeVins);
-                }
-            }
+        /**
+         * crée un nouveau tab filtré avec les nouveaux criteres
+         */
+        var vinsFiltres = vins.filter(function (vin) {
+            var filtreAnnee = annee === "" || vin.year === annee;
+            var filtrePays = pays === "All Countries" || vin.country === pays;
+            return filtreAnnee && filtrePays;
         });
 
+        // Tri par cépage
+        if (cepage !== "All grapes") {
+            vinsFiltres.sort(function (a, b) {
+                var grapesA = a.grapes || "";
+                var grapesB = b.grapes || "";
+                return grapesA.localeCompare(grapesB);
+            });
+        }
+
+        console.log("Vins filtrés et triés : ", vinsFiltres); // Pour le débogage
+
+        // Afficher les vins filtré 
+        vinsFiltres.forEach(function (val) {
+            var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')" class="list-group-item list-group-item-action">' + val.name + '</a>';
+            $("#vins").append(listeVins);
+        });
     });
 }
 
