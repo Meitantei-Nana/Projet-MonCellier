@@ -253,15 +253,14 @@ function afficheVin(id) {
 
 
 /**
- * 
- * @param {*} pageID 
+ * charge le contenu de la page en fct de l id fourni
+ * @param {*} pageID id du contenu (home - a propos - login)
  */
 function chargercontenu(pageID) {
-    // Hide all content sections
+
     const contentSections = $(".page-content");
     contentSections.hide();
 
-    // Show the selected content section
     const selectedContent = $("#" + pageID);
     selectedContent.show();
 }
@@ -282,21 +281,111 @@ $("#login").click(function () {
 
 
 
+const token = localStorage.getItem("token");
+
+var authentified = false;
+/**
+ * 
+ * @returns si l' utilisateur est authentifié 
+ */
+async function estAuthentifie() {
+    try {
+        const response = await api("users");
+
+        if (response.status === 200) {
+            const user = await response.json();
+            console.log("L'utilisateur authentifié est : " + user.username);
+            return true;
+        } else {
+            console.log("L'utilisateur n'est pas authentifié");
+            return false;
+        }
+    } catch (error) {
+        console.error("Erreur lors de la vérification de l'authentification", error);
+        return false;
+    }
+}
+
+estAuthentifie();
 
 
 
+function authentifier(login, password) {
+
+    const reqconnexion = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/users/authenticate";
+
+    fetch(reqconnexion, {
+        method: "GET",
+        headers: {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': 'Basic ' + btoa(login + ':' + password)
+        }, verbose: true
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Échec de l\'authentification avec le statut ' + response.statusText);
+            }
+
+
+            return response.json();
 
 
 
-function estAuthentifie() {
+        })
+        .then(data => {
+            console.log(data);
+            if (!data.sucess) {
+                throw new Error(data.message || 'Echec de l authentification');
+            }
 
-    return true;
+            localStorage.setItem("token", data.token);
+            console.log("Authentification réussie", data);
+        })
+        .catch(error => {
+            console.error("Erreur d'authentification:", error);
+        });
+
+
 }
 
 
+/*
+// Créer la requête HTTP
+function authentifier(token) {
+    reqAuthentifier = api("users");
+    const request = new Request(reqAuthentifier, {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer " + token,
+        },
+    });
+ 
+    // Envoyer la requête HTTP
+    fetch(request).then((response) => {
+        estAuthentifie();
+    });
+}
+ 
+*/
+
+const loginA = $('#loginlabel').val();
+const passwordB = $('#passwordlabel').val();
+const loginForm = document.getElementById("loginForm");
+
+
+loginForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
+
+    // Lancer l'action
+    authentifier(loginA, passwordB);
+});
 
 
 
+/**
+ * gestion des comportements selon le click 
+ */
 $('.btn-action').click(function () {
 
     if (estAuthentifie) {
@@ -320,10 +409,7 @@ $('.btn-action').click(function () {
         }
 
     } else {
-        $("#login").click(function () {
-            location.href = "#login";
-        });
-
+        location.href = "#login";
 
     }
 });
