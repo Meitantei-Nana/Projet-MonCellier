@@ -150,19 +150,88 @@
                                     <td id="price"></td>
                                 </tr>
                             </table>
-
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <span class="me-2">❤️ Like this wine</span>
-                                    <button type="button" class="btn btn-light btn-sm me-2">
-                                        ❤️ Like
+                                    <!-- Boutons Like, Dislike, Add a Picture et Add a Note -->
+                                    <button type="button" class="btn btn-light btn-sm me-2" id="btnAddPicture">
+                                        📷 Add a Picture
+                                    </button>
+                                    <button type="button" class="btn btn-light btn-sm me-2" id="btnAddNote">
+                                        📝 Add a Note
+                                    </button>
+                                    <button type="button" class="btn btn-light btn-sm me-2" id="btnLike">
+                                        ❤️ Like <span id="likeCount">0</span>
+                                    </button>
+                                    <button type="button" class="btn btn-light btn-sm me-2" id="btnDislike">
+                                        👎 Dislike <span id="dislikeCount">0</span>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-
+                        
+                            <div id="noteSection" class="row" style="display: none;">
+                                <div class="col">
+                                    <textarea name="note" id="note" cols="" rows="5"></textarea>
+                                    <div class="row p-2">
+                                        <button class="btn btn-action p-2 col-2" id="btnAddNote">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <!-- Input pour le téléchargement d'une image -->
+                            <input type="file" id="imageInput" style="display: none;">
+                        
+                            <!-- Section pour afficher l'image -->
+                            <div id="imageSection" class="row" style="display: none;">
+                                <div class="col">
+                                    <img id="selectedImage" width="auto" height="200" alt="">
+                                </div>
+                            </div>
+                        
+                            <script>
+                                // Gestionnaire d'événement pour le bouton Add a Picture
+                                document.getElementById('btnAddPicture').addEventListener('click', function () {
+                                    // Déclenche le clic sur l'élément input type="file"
+                                    document.getElementById('imageInput').click();
+                                });
+                        
+                                // Gestionnaire d'événement pour l'élément input type="file"
+                                document.getElementById('imageInput').addEventListener('change', function (event) {
+                                    // Vous pouvez accéder au fichier sélectionné via event.target.files[0]
+                                    const selectedImage = event.target.files[0];
+                                    
+                                    // Affiche l'image sélectionnée sur la page
+                                    if (selectedImage) {
+                                        const reader = new FileReader();
+                                        reader.onload = function (e) {
+                                            document.getElementById('selectedImage').src = e.target.result;
+                                            document.getElementById('imageSection').style.display = 'block';
+                                        };
+                                        reader.readAsDataURL(selectedImage);
+                                    }
+                                });
+                        
+                                // Gestionnaire d'événement pour le bouton Add a Note
+                                document.getElementById('btnAddNote').addEventListener('click', function () {
+                                    // Affiche la section de la note lorsqu'on appuie sur le bouton Add a Note
+                                    document.getElementById('noteSection').style.display = 'block';
+                                });
+                        
+                                // Gestionnaire d'événement pour le bouton Like
+                                document.getElementById('btnLike').addEventListener('click', function () {
+                                    // Vous pouvez mettre à jour un compteur, enregistrer le like dans la base de données, etc.
+                                    let likeCount = parseInt(document.getElementById('likeCount').innerText);
+                                    likeCount++;
+                                    document.getElementById('likeCount').innerText = likeCount;
+                                });
+                        
+                                // Gestionnaire d'événement pour le bouton Dislike
+                                document.getElementById('btnDislike').addEventListener('click', function () {
+                                    // Vous pouvez mettre à jour un compteur, enregistrer le dislike dans la base de données, etc.
+                                    let dislikeCount = parseInt(document.getElementById('dislikeCount').innerText);
+                                    dislikeCount++;
+                                    document.getElementById('dislikeCount').innerText = dislikeCount;
+                                });
+                            </script>
 
 
                     <div class="row">
