@@ -108,7 +108,7 @@ ajouterraisainAuselect(grapeNames);
 var urlPays = "wines/countries";
 var reqPays = api(urlPays);
 /**
- * réponse succes, ajout des pays dans la liste défilante du formulaire
+ *  ajout des pays dans la liste défilante du formulaire
  */
 reqPays.done(function (pays) {
     //console.log(pays);
@@ -129,8 +129,8 @@ reqPays.done(function (pays) {
 
 /* Vins
 var vinsRecherche = $("#searchVins");
-var urlVins = "wines"; //wines/search?keyword=Chateau
-var reqVins = api(urlVins);
+var fullUrls = "wines"; //wines/search?keyword=Chateau
+var reqVins = api(fullUrls);
 reqVins.done(function (vins) {
     //console.log("vins",vins);
     $.each(vins, function (id, val) {
@@ -152,7 +152,7 @@ function refreshVins(action = "search") {
     // recuperation de la valeur du vins a rechercher
     var vinsRecherche = $("#searchVins").val();
     // url de l'API de recherche du vins
-    var urlVins = "wines/search?keyword=" + vinsRecherche;
+    var fullUrls = "wines/search?keyword=" + vinsRecherche;
     // url de l'API de recherche par Pays
     var pays = $("#pays").val();
     var annee = $("#annee").val();
@@ -161,7 +161,7 @@ function refreshVins(action = "search") {
     console.log(cepage);
     var paysFiltre = "wines?key=country&val=" + pays + "&sort=year";
 
-    var urlFinal = urlVins;
+    var urlFinal = fullUrls;
     if (action == "filtre") {
         urlFinal = paysFiltre;
     }
@@ -201,7 +201,7 @@ function refreshVins(action = "search") {
 }
 
 // Remplissage des informations
-var touslesvins = {};
+
 
 /**
  * complete les détails du vin
@@ -252,12 +252,14 @@ function afficheVin(id) {
 }
 
 
+
 /**
  * charge le contenu de la page en fct de l id fourni
  * @param {*} pageID id du contenu (home - a propos - login)
  */
-function chargercontenu(pageID) {
 
+function chargercontenu(pageID) {
+    console.log("Chargement du contenu pour :", pageID);
     const contentSections = $(".page-content");
     contentSections.hide();
 
@@ -265,48 +267,21 @@ function chargercontenu(pageID) {
     selectedContent.show();
 }
 
-$("#home").click(function () {
-    chargercontenu("home");
-});
-
-$("#about").click(function () {
-    chargercontenu("about");
-});
-
-$("#login").click(function () {
-    chargercontenu("login");
+$(document).ready(function () {
+    $("[data-target]").click(function (event) {
+        event.preventDefault();
+        var pageID = $(this).data('target');
+        chargercontenu(pageID);
+    });
 });
 
 
 
 
 
-const token = localStorage.getItem("token");
 
-var authentified = false;
-/**
- * 
- * @returns si l' utilisateur est authentifié 
- */
-async function estAuthentifie() {
-    try {
-        const response = await api("users");
 
-        if (response.status === 200) {
-            const user = await response.json();
-            console.log("L'utilisateur authentifié est : " + user.username);
-            return true;
-        } else {
-            console.log("L'utilisateur n'est pas authentifié");
-            return false;
-        }
-    } catch (error) {
-        console.error("Erreur lors de la vérification de l'authentification", error);
-        return false;
-    }
-}
 
-estAuthentifie();
 
 
 
@@ -314,62 +289,72 @@ function authentifier(login, password) {
 
     const reqconnexion = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/users/authenticate";
 
+    const credentials = btoa(login + ':' + password);
+
     fetch(reqconnexion, {
         method: "GET",
         headers: {
             'content-type': 'application/json; charset=utf-8',
-            'Authorization': 'Basic ' + btoa(login + ':' + password)
+            'Authorization': 'Basic ' + credentials
         }, verbose: true
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Échec de l\'authentification avec le statut ' + response.statusText);
+
             }
-
-
             return response.json();
+
 
 
 
         })
         .then(data => {
             console.log(data);
-            if (!data.sucess) {
-                throw new Error(data.message || 'Echec de l authentification');
+            if (data.success) {
+                sessionStorage.setItem('userId', data.id);
+                sessionStorage.setItem('credentials', credentials);
+
+                $('#loginStatus').html(`
+             <p>Vous êtes connecté. Bienvenue !</p>
+          <a href="#home" onclick="chargercontenu('home')">Retour à l'accueil</a>
+        `);
+
             }
 
-            localStorage.setItem("token", data.token);
-            console.log("Authentification réussie", data);
+
+
+        }).catch(error => {
+            console.log(error);
+
+            $('#loginStatus').text(error.message);
+
+
         })
-        .catch(error => {
-            console.error("Erreur d'authentification:", error);
-        });
+
 
 
 }
 
 
-/*
-// Créer la requête HTTP
-function authentifier(token) {
-    reqAuthentifier = api("users");
-    const request = new Request(reqAuthentifier, {
-        method: "GET",
-        headers: {
-            "Authorization": "Bearer " + token,
-        },
-    });
- 
-    // Envoyer la requête HTTP
-    fetch(request).then((response) => {
-        estAuthentifie();
-    });
-}
- 
-*/
+/**
+ * 
+ * @returns {boolean} si l' utilisateur est authentifié 
+ */
+function estAuthentifie() {
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+        console.log('Toujours connecté');
+        return true;
+    } else {
+        console.log('Pas de session active');
 
-const loginA = $('#loginlabel').val();
-const passwordB = $('#passwordlabel').val();
+        return false;
+    }
+}
+
+
+
 const loginForm = document.getElementById("loginForm");
 
 
@@ -377,42 +362,115 @@ loginForm.addEventListener("submit", function (event) {
 
     event.preventDefault();
 
+    const loginA = $('#loginlabel').val();
+    const passwordB = $('#passwordlabel').val();
     // Lancer l'action
     authentifier(loginA, passwordB);
+    console.log(estAuthentifie);
 });
+
+
+
+
+function ajoutercommentaire(wineId, commentaire) {
+
+
+    var fullUrl = 'https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/' + wineId + '/comments'
+    var storedCredentials = sessionStorage.getItem('credentials');
+    if (commentaire) {
+
+        const options = {
+            method: 'post',
+            body: JSON.stringify({ 'content': commentaire }),
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + storedCredentials
+            }
+        };
+
+        fetch(fullUrl, options)
+            .then((response) => {
+                if (response.ok) {
+                    console.log(response);
+                    return response.json();
+                } else {
+                    throw new Error('erreur d envoi de commentaire');
+                }
+
+            }).then(data => {
+
+                console.log('commentaire ajouté'.data);
+
+            })
+
+    }
+
+}
+
+function modifiercommentaire(wineId, commentid) {
+
+
+}
+/**
+ * gestion des comportements selon le click 
+ */
+
+$(document).ready(function () {
+    $('.btn-action').click(function () {
+
+        var wineId = $(this).data('wineId');
+        var commentaire = $('#comment').val().trim();
+
+        if (estAuthentifie()) {
+            var action = $(this).data('action');
+            switch (action) {
+                case 'ajouter':
+                    console.log("Ajouter");
+                    ajoutercommentaire(wineId, commentaire);
+
+                    break;
+                case 'modifier':
+                    modifiercommentaire();
+                    console.log("Modifier");
+
+                    break;
+                case 'supprimer':
+                    supprimercommentaire();
+                    console.log("Supprimer");
+                    // Logique pour Supprimer
+
+                    break;
+                default:
+                    console.log("Action non reconnue");
+            }
+        } else {
+
+            chargercontenu('login');
+        }
+
+
+
+    });
+})
 
 
 
 /**
- * gestion des comportements selon le click 
+ * deconnecte l utilisateur 
  */
-$('.btn-action').click(function () {
+function logout() {
+    sessionStorage.removeItem('userId');
 
-    if (estAuthentifie) {
-        var action = $(this).data('action');
-        switch (action) {
-            case 'ajouter':
-                console.log("Ajouter");
+}
 
-                break;
-            case 'modifier':
-                console.log("Modifier");
 
-                break;
-            case 'supprimer':
-                console.log("Supprimer");
-                // Logique pour Supprimer
+/*
+window.addEventListener('beforeunload', function (e) {
 
-                break;
-            default:
-                console.log("Action non reconnue");
-        }
+    logout();
 
-    } else {
-        location.href = "#login";
 
-    }
-});
-
+    e.returnValue = 'deconnecté';
+});*/
 
 // COnnexion

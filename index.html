@@ -5,12 +5,17 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Great+Vibes&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&family=Mukta&family=Playfair+Display&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
-    <link rel="stylesheet" href="style.css">
+
     <title>Caviste</title>
 </head>
 
@@ -24,17 +29,16 @@
             </a>
             <ul class="nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#home"
-                        onclick="chargercontenu('home')">Home</a>
+                    <a class="nav-link active" aria-current="page" data-target="home" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#about" onclick="chargercontenu('about')">About</a>
+                    <a class="nav-link" data-target="about" href="#">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#login" onclick="chargercontenu('login')">Login</a>
+                    <a class="nav-link" data-target="login" href="#">Login</a>
                 </li>
-
             </ul>
+
         </div>
     </nav>
 
@@ -47,7 +51,7 @@
                 <form class="row g-3">
 
                     <div class="col-auto">
-                        <label for="inputPassword2" class="visually-hidden"></label>
+                        <label class="visually-hidden"></label>
                         <input type="text" class="form-control" id="searchVins" placeholder="Enter keyWord here...">
                     </div>
                     <div class="col-auto">
@@ -89,7 +93,8 @@
 
 
                     <div class="col-auto">
-                        <button id="btFiltre" type="button" class="btn btn-primary">Appliquer les filtres</button>
+                        <button id="btFiltre" type="button" class="btn btn-primary">Appliquer les
+                            filtres</button>
                     </div>
 
 
@@ -156,56 +161,99 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
                     <div class="row">
                         <nav>
                             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                                    data-bs-target="#description" type="button" role="tab" aria-controls="nav-home"
+                                <button class="nav-link active" id="nav-home-description" data-bs-toggle="tab"
+                                    data-bs-target="#description" type="button" role="tab" aria-controls="description"
                                     aria-selected="true">Description</button>
-                                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
+                                <button class="nav-link" id="nav-home-commentaires" data-bs-toggle="tab"
+                                    data-bs-target="#commentaires" type="button" role="tab" aria-controls="commentaires"
                                     aria-selected="false">Commentaires</button>
-                                <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact"
-                                    aria-selected="false">Notes personnelles</button>
+                                <button class="nav-link" id="nav-home-notes" data-bs-toggle="tab"
+                                    data-bs-target="#notes" type="button" role="tab" aria-controls="notes"
+                                    aria-selected="false">Notes
+                                    personnelles</button>
                             </div>
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="description" role="tabpanel"
-                                aria-labelledby="nav-home-tab">...</div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                aria-labelledby="nav-profile-tab">
-                                <textarea name="comment" id="comment" cols="" rows="5">
+                                aria-labelledby="nav-home-description">...</div>
 
-                                </textarea>
+                            <div class="tab-pane fade" id="commentaires" role="tabpanel"
+                                aria-labelledby="nav-home-commentaires">
+                                <textarea name="comment" id="comment" rows="5"></textarea>
                                 <div class="row p-2">
-                                    <button class="btn btn-action p-2 col-2" data-action="ajouter">Ajouter</button>
-                                    <button class="btn btn-action p-2 col-2" data-action="modifier">Modifier</button>
-                                    <button class="btn btn-action p-2 col-2" data-action="supprimer">Supprimer</button>
-
+                                    <button class="btn btn-primary p-2 col-2 btn-action"
+                                        data-action="ajouter">Ajouter</button>
+                                    <button class="btn btn-primary p-2 col-2 btn-action"
+                                        data-action="modifier">Modifier</button>
+                                    <button class="btn btn-primary p-2 col-2 btn-action"
+                                        data-action="supprimer">Supprimer</button>
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="nav-contact" role="tabpanel"
-                                aria-labelledby="nav-contact-tab">
 
-                                ...
-
+                                <div id="commentaires-existants">
+                                    <!-- Ici,  le code pour  les commentaires existants -->
+                                </div>
 
                             </div>
+
+                            <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="nav-home-notes">
+                                <!-- Contenu des notes personnelles ici -->
+                            </div>
+
                         </div>
                     </div>
+
+
+
                 </div>
             </div>
         </div>
-
-
-
     </div>
 
-    <div id="about" class="page-content">
 
 
 
+
+
+    <div id="about" class="page-content" style="display: none;">
+
+
+        <div class="container">
+            <h2>À Propos de Notre Catalogue de Vins</h2>
+            <p>Bienvenue dans notre catalogue de vins exclusif, une collection méticuleusement sélectionnée des
+                meilleurs vins du monde. Notre passion pour le vin nous a inspirés à créer un espace où les amateurs de
+                vin peuvent explorer et découvrir une variété de vins exceptionnels.</p>
+
+            <h3>Découverte et Diversité</h3>
+            <p>Nous sommes fiers de présenter une gamme diversifiée de vins, allant des classiques intemporels aux
+                découvertes modernes. Notre catalogue comprend :</p>
+            <ul>
+                <li>Vins Rouges: des Merlots veloutés aux Cabernets robustes.</li>
+                <li>Vins Blancs: des Chardonnays crémeux aux Sauvignon Blancs rafraîchissants.</li>
+                <li>Vins Rosés et Mousseux: pour célébrer les moments spéciaux.</li>
+            </ul>
+
+            <h3>Engagement envers la Qualité</h3>
+            <p>Chaque vin dans notre catalogue a été soigneusement sélectionné pour sa qualité exceptionnelle et son
+                caractère unique. Nous collaborons étroitement avec des vignerons renommés et des sommeliers experts
+                pour garantir que chaque bouteille offre une expérience mémorable.</p>
+
+            <h3>Informations Détaillées</h3>
+            <p>Pour chaque vin, notre catalogue offre des détails complets, y compris les notes de dégustation, les
+                suggestions d'accords mets-vins, et l'histoire des vignobles. Nous croyons que chaque vin a une histoire
+                à raconter, et nous sommes ravis de partager ces récits avec vous.</p>
+
+            <h3>Rejoignez Notre Communauté</h3>
+            <p>Que vous soyez un connaisseur expérimenté ou un amateur de vin en devenir, notre catalogue est conçu pour
+                enrichir votre voyage dans le monde du vin. Rejoignez-nous dans cette aventure gustative et découvrez le
+                vin qui parle à votre palais.</p>
+        </div>
 
 
     </div>
@@ -222,15 +270,21 @@
                             <form id="loginForm">
                                 <div class="form-group">
                                     <label for="loginlabel">Login</label>
-                                    <input type="text" class="form-control" id="login" placeholder="Entrez votre login">
+                                    <input type="text" class="form-control" id="loginlabel"
+                                        placeholder="Entrez votre login">
                                 </div>
                                 <div class="form-group">
                                     <label for="passwordlabel">Mot de passe</label>
-                                    <input type="password" class="form-control" id="password"
+                                    <input type="password" class="form-control" id="passwordlabel"
                                         placeholder="Mot de passe">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Se connecter</button>
                             </form>
+
+                            <div id="loginStatus" class="login-status">
+                                <!-- Le message de succès de connexion ici -->
+                            </div>
+
                         </div>
                     </div>
                 </div>
