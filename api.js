@@ -372,16 +372,16 @@ loginForm.addEventListener("submit", function (event) {
 
 
 
-function ajoutercommentaire(wineId, commentaire) {
+function ajoutercommentaire(wineId, comment) {
 
 
     var fullUrl = 'https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/' + wineId + '/comments'
     var storedCredentials = sessionStorage.getItem('credentials');
-    if (commentaire) {
+    if (comment) {
 
         const options = {
             method: 'post',
-            body: JSON.stringify({ 'content': commentaire }),
+            body: JSON.stringify({ 'content': comment }),
             headers: {
                 'content-type': 'application/json; charset=utf-8',
                 'Authorization': 'Basic ' + storedCredentials
@@ -399,7 +399,7 @@ function ajoutercommentaire(wineId, commentaire) {
 
             }).then(data => {
 
-                console.log('commentaire ajouté'.data);
+                console.log('commentaire ajouté', data);
 
             })
 
@@ -411,6 +411,10 @@ function modifiercommentaire(wineId, commentid) {
 
 
 }
+
+function supprimercommentaire(wineId, commentid) {
+
+}
 /**
  * gestion des comportements selon le click 
  */
@@ -419,23 +423,23 @@ $(document).ready(function () {
     $('.btn-action').click(function () {
 
         var wineId = $(this).data('wineId');
-        var commentaire = $('#comment').val().trim();
+        var comment = $('#comment').val().trim();
 
         if (estAuthentifie()) {
             var action = $(this).data('action');
             switch (action) {
                 case 'ajouter':
                     console.log("Ajouter");
-                    ajoutercommentaire(wineId, commentaire);
+                    ajoutercommentaire(wineId, comment);
 
                     break;
                 case 'modifier':
-                    modifiercommentaire();
+                    modifiercommentaire(wineId, commentid);
                     console.log("Modifier");
 
                     break;
                 case 'supprimer':
-                    supprimercommentaire();
+                    supprimercommentaire(wineId, commentid);
                     console.log("Supprimer");
                     // Logique pour Supprimer
 
