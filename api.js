@@ -228,7 +228,7 @@ function afficheVin(id) {
         $("#color").html(vin.color);
         $("#extra").html(vin.extra);
 
-
+        $('.btn-action').data('wineId', id);
 
 
     });
@@ -420,17 +420,24 @@ function supprimercommentaire(wineId, commentid) {
  */
 
 $(document).ready(function () {
-    $('.btn-action').click(function () {
-
+    $(document).on('click', '.btn-action', function () {
+        console.log('clic detecte');
         var wineId = $(this).data('wineId');
         var comment = $('#comment').val().trim();
+        console.log('comm recupere ', comment)
 
+        var action = $(this).data('action');
+
+
+
+        console.log("idvin", wineId, "comment", comment);
         if (estAuthentifie()) {
-            var action = $(this).data('action');
+
             switch (action) {
                 case 'ajouter':
                     console.log("Ajouter");
                     ajoutercommentaire(wineId, comment);
+
 
                     break;
                 case 'modifier':
