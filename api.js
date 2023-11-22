@@ -170,7 +170,7 @@ function refreshVins(action = "search") {
     var reqVins = api(urlFinal);
     // recuperation et affichage des vins
     reqVins.done(function (vins) {
-        // Filtrez par année et pays
+
 
         /**
          * crée un nouveau tab filtré avec les nouveaux criteres
@@ -304,10 +304,6 @@ function authentifier(login, password) {
 
             }
             return response.json();
-
-
-
-
         })
         .then(data => {
             console.log(data);
@@ -319,10 +315,7 @@ function authentifier(login, password) {
              <p>Vous êtes connecté. Bienvenue !</p>
           <a href="#home" onclick="chargercontenu('home')">Retour à l'accueil</a>
         `);
-
             }
-
-
 
         }).catch(error => {
             console.log(error);
@@ -331,9 +324,6 @@ function authentifier(login, password) {
 
 
         })
-
-
-
 }
 
 
@@ -419,50 +409,50 @@ function supprimercommentaire(wineId, commentid) {
  * gestion des comportements selon le click 
  */
 
-$(document).ready(function () {
-    $(document).on('click', '.btn-action', function () {
-        console.log('clic detecte');
-        var wineId = $(this).data('wineId');
-        var comment = $('#comment').val().trim();
-        console.log('comm recupere ', comment)
 
+
+$(document).ready(function () {
+
+    $('.btn-action').on('click', function (event) {
+        event.preventDefault();
+        console.log($(this))
+        console.log('clic detecte');
+
+
+        console.log($('#yorum').length)
+        var wineId = $(this).data('wineId');
+        var yorum = $('#yorum').val().trim();
         var action = $(this).data('action');
 
+        console.log("idvin", wineId, "comment", yorum);
 
-
-        console.log("idvin", wineId, "comment", comment);
         if (estAuthentifie()) {
-
             switch (action) {
                 case 'ajouter':
                     console.log("Ajouter");
-                    ajoutercommentaire(wineId, comment);
 
-
+                    ajoutercommentaire(wineId, yorum);
+                    //$('#co').empty();
                     break;
+
                 case 'modifier':
-                    modifiercommentaire(wineId, commentid);
                     console.log("Modifier");
+                    modifiercommentaire(wineId, commentid);
 
                     break;
                 case 'supprimer':
-                    supprimercommentaire(wineId, commentid);
                     console.log("Supprimer");
-                    // Logique pour Supprimer
-
+                    supprimercommentaire(wineId, commentid);
                     break;
                 default:
                     console.log("Action non reconnue");
             }
         } else {
-
             chargercontenu('login');
         }
-
-
-
     });
-})
+});
+
 
 
 
