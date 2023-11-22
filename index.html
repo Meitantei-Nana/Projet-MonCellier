@@ -193,7 +193,7 @@
                                 </div> <br><br>
 
 
-                                <textarea name="com" id="yorum" rows="5"></textarea>
+                                <textarea name="comment" id="comment" rows="5"></textarea>
                                 <div class="row p-2">
                                     <button class="btn btn-primary p-2 col-2 btn-action"
                                         data-action="ajouter">Ajouter</button>
@@ -316,11 +316,13 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
+
         ClassicEditor
-            .create(document.querySelector('#yorum'))
+            .create(document.querySelector('#comment'))
             .catch(error => {
                 console.error(error);
             });
+
     </script>
     <script src="api.js"></script>
 

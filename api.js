@@ -202,6 +202,7 @@ function refreshVins(action = "search") {
 
 // Remplissage des informations
 
+var wineId;
 
 /**
  * complete les détails du vin
@@ -229,6 +230,8 @@ function afficheVin(id) {
         $("#extra").html(vin.extra);
 
         $('.btn-action').data('wineId', id);
+
+
 
 
     });
@@ -418,20 +421,20 @@ $(document).ready(function () {
         console.log($(this))
         console.log('clic detecte');
 
-
-        console.log($('#yorum').length)
+        var comment = $('#commentaires div.ck.ck-editor__main > div').text()
+        //console.log($('#comment').length)
         var wineId = $(this).data('wineId');
-        var yorum = $('#yorum').val().trim();
+        // var comment = $('#comment').val().trim();
         var action = $(this).data('action');
 
-        console.log("idvin", wineId, "comment", yorum);
+        console.log("idvin", wineId, "comment", comment);
 
         if (estAuthentifie()) {
             switch (action) {
                 case 'ajouter':
                     console.log("Ajouter");
 
-                    ajoutercommentaire(wineId, yorum);
+                    ajoutercommentaire(wineId, comment);
                     //$('#co').empty();
                     break;
 
