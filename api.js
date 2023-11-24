@@ -384,7 +384,7 @@ function ajoutercommentaire(wineId, comment) {
         fetch(fullUrl, options)
             .then((response) => {
                 if (response.ok) {
-                    console.log(response);
+
                     return response.json();
                 } else {
                     throw new Error('erreur d envoi de commentaire');
@@ -400,13 +400,72 @@ function ajoutercommentaire(wineId, comment) {
 
 }
 
-function modifiercommentaire(wineId, commentid) {
 
+/* boite alerte apres clic sur bouton  */
 
+function modifiercommentaire(wineId, commentid, commentaireModifie) {
+    var fullUrl = 'https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/' + wineId + '/' + commentid;
+    var storedCredentials = sessionStorage.getItem('credentials');
+    if (commentid) {
+
+        const options = {
+            method: 'put',
+            body: JSON.stringify({ 'content': commentaireModifie }),
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + storedCredentials
+            }
+        };
+
+        fetch(fullUrl, options)
+            .then((response) => {
+                if (response.ok) {
+                    console.log('Requête de modification réussie');
+                    return response.json();
+                } else {
+                    throw new Error('erreur d envoi de commentaire');
+                }
+
+            }).then(data => {
+
+                console.log('commentaire modifié avec succes ', data);
+
+            })
+
+            .catch((error) => {
+                console.error('Erreur lors de la modification du commentaire :', error);
+            });
+    }
 }
 
 function supprimercommentaire(wineId, commentid) {
+    var fullUrl = 'https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/' + wineId + '/' + commentid;
+    var storedCredentials = sessionStorage.getItem('credentials');
+    if (commentid) {
 
+        const options = {
+            method: 'delete',
+
+            headers: {
+                'content-type': 'application/json; charset=utf-8',
+                'Authorization': 'Basic ' + storedCredentials
+            }
+        };
+
+        fetch(fullUrl, options)
+            .then((response) => {
+                if (response.ok) {
+                    console.log(response);
+                    console.log('Commentaire supprimé avec succès');
+                    return response.json();
+                } else {
+                    throw new Error('erreur de la supression  de commentaire');
+                }
+
+            }).catch((error) => {
+                console.error('Erreur lors de la suppression du commentaire :', error);
+            });
+    }
 }
 /**
  * gestion des comportements selon le click 
@@ -440,11 +499,20 @@ $(document).ready(function () {
 
                 case 'modifier':
                     console.log("Modifier");
-                    modifiercommentaire(wineId, commentid);
+                    var commentid = prompt('entrer le numero du comm');
+                    console.log('numero comment a modifier ', commentid);
+
+                    if (commentid) {
+                        var commentaireModifie = prompt('Entrez le nouveau contenu du commentaire');
+
+                    }
+                    modifiercommentaire(commentid, wineId, commentaireModifie);
 
                     break;
                 case 'supprimer':
                     console.log("Supprimer");
+                    var commentid = prompt('entrer le numero du comm');
+                    console.log('numero comment a supprimer : ', commentid);
                     supprimercommentaire(wineId, commentid);
                     break;
                 default:
