@@ -1,17 +1,16 @@
 var urlbase = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/";
 
-const btSearch = document.getElementById('btSearch');
+const btSearch = document.getElementById("btSearch");
 
-btSearch.addEventListener('click', function (e) {
+btSearch.addEventListener("click", function (e) {
     refreshVins();
 });
 
-const btfiltre = document.getElementById('btFiltre');
+const btfiltre = document.getElementById("btFiltre");
 
-btSearch.addEventListener('click', function (e) {
-    refreshVins('filtre');
+btSearch.addEventListener("click", function (e) {
+    refreshVins("filtre");
 });
-
 
 /*
 $.ajax({
@@ -31,27 +30,26 @@ $.ajax({
 */
 
 /**
- * 
+ *
  * @param {*} url partie d' url a ajouter a url de base
  * @param {*} methode méthode http a utiliser
  * @param {*} donnees données a envoyer avec la requete
- * @returns retourne l' objet request qui contient la réponse de la requete 
+ * @returns retourne l' objet request qui contient la réponse de la requete
  */
-function api(url, methode = 'GET', donnees = null) {
+function api(url, methode = "GET", donnees = null) {
     // url de base de l'API
     var urlbase = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/";
     // Requete Ajax de récuperation des données
     var request = $.ajax({
         method: methode,
         url: urlbase + url,
-        data: donnees
+        data: donnees,
     });
     // On retourne la requete contenant les informations
     return request;
 }
 
-
-var grapeNames = new Set()
+var grapeNames = new Set();
 /**
  * récupere les noms de raisains dans un tableau sans doublon
  */
@@ -62,45 +60,41 @@ function recupererRaisainsApi() {
     reqgrapes.done(function (vins) {
         vins.forEach(function (vin) {
             if (vin.grapes) {
-
-                var raisins = vin.grapes.split(',').map(function (raisin) {
+                var raisins = vin.grapes.split(",").map(function (raisin) {
                     return raisin.trim();
                 });
                 raisins.forEach(function (raisin) {
                     grapeNames.add(raisin);
-                })
+                });
             }
-
         });
-        console.log('grapes : ' + Array.from(grapeNames));
+        console.log("grapes : " + Array.from(grapeNames));
         ajouterraisainAuselect(grapeNames);
-    })
+    });
 }
 recupererRaisainsApi();
-
 
 /**
  * utilisation de jquery
  * @param {*} raisins liste des raisain
  */
-var selectedCepage = '';
+var selectedCepage = "";
 function ajouterraisainAuselect(raisins) {
-    var $selectCephage = $('#cephage');
+    var $selectCephage = $("#cephage");
 
     $selectCephage.empty();
 
-    $selectCephage.append($('<option>', { value: '', text: 'All grapes' }));
+    $selectCephage.append($("<option>", { value: "", text: "All grapes" }));
 
     raisins.forEach(function (raisin) {
-        $selectCephage.append($('<option>', { value: raisin, text: raisin }));
+        $selectCephage.append($("<option>", { value: raisin, text: raisin }));
 
-        console.log('selected'.$selectCephage);
+        console.log("selected".$selectCephage);
     });
     $selectCephage.change(function () {
         selectedCepage = $(this).val();
     });
 }
-
 
 ajouterraisainAuselect(grapeNames);
 
@@ -116,16 +110,12 @@ reqPays.done(function (pays) {
         var option = "";
         option += '<option value="' + val.country + '">';
         option += val.country;
-        option += '</option>';
+        option += "</option>";
         $("#pays").append(option);
     });
 });
 
-
-
-
 // Filter
-
 
 /* Vins
 var vinsRecherche = $("#searchVins");
@@ -156,7 +146,7 @@ function refreshVins(action = "search") {
     // url de l'API de recherche par Pays
     var pays = $("#pays").val();
     var annee = $("#annee").val();
-    var cepage = $('#cephage').val();
+    var cepage = $("#cephage").val();
 
     console.log(cepage);
     var paysFiltre = "wines?key=country&val=" + pays + "&sort=year";
@@ -170,7 +160,7 @@ function refreshVins(action = "search") {
     var reqVins = api(urlFinal);
     // recuperation et affichage des vins
     reqVins.done(function (vins) {
-
+        // Filtrez par année et pays
 
         /**
          * crée un nouveau tab filtré avec les nouveaux criteres
@@ -192,17 +182,20 @@ function refreshVins(action = "search") {
 
         console.log("Vins filtrés et triés : ", vinsFiltres); // Pour le débogage
 
-        // Afficher les vins filtré 
+        // Afficher les vins filtré
         vinsFiltres.forEach(function (val) {
-            var listeVins = '<a href="#" onclick="afficheVin(' + val.id + ')" class="list-group-item list-group-item-action">' + val.name + '</a>';
+            var listeVins =
+                '<a href="#" onclick="afficheVin(' +
+                val.id +
+                ')" class="list-group-item list-group-item-action">' +
+                val.name +
+                "</a>";
             $("#vins").append(listeVins);
         });
     });
 }
 
 // Remplissage des informations
-
-var wineId;
 
 /**
  * complete les détails du vin
@@ -223,38 +216,81 @@ function afficheVin(id) {
         $("#country").html(vin.country);
         $("#region").html(vin.region);
         $("#description").html(vin.description);
-        $("#picture").attr('src', pathImg + vin.picture);
+        $("#picture").attr("src", pathImg + vin.picture);
         $("#price").html(vin.price);
         $("#capacity").html(vin.capacity);
         $("#color").html(vin.color);
         $("#extra").html(vin.extra);
-
-        $('.btn-action').data('wineId', id);
-
-
-
-
     });
 
-
     /**
-     * {
-        
-        "year": "2009",
-       
-        "country": "France",
-        "region": "Burgundy",
-        "description": "Breaking the mold of the classics, this offering will surprise and undoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Breaking the mold of the classics, this offering will surprise and\nundoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Sure to please the late-night crowd with the slight jolt of adrenaline it brings.",
-        "picture": "morizottes.jpg",
-        "price": "20.99",
-        "capacity": "75.00",
-        "color": "red",
-        "extra": null
-    }
-     */
+       * {
+          
+          "year": "2009",
+         
+          "country": "France",
+          "region": "Burgundy",
+          "description": "Breaking the mold of the classics, this offering will surprise and undoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Breaking the mold of the classics, this offering will surprise and\nundoubtedly get tongues wagging with the hints of coffee and tobacco in\nperfect alignment with more traditional notes. Sure to please the late-night crowd with the slight jolt of adrenaline it brings.",
+          "picture": "morizottes.jpg",
+          "price": "20.99",
+          "capacity": "75.00",
+          "color": "red",
+          "extra": null
+      }
+       */
 }
 
+function obtenirTousLesVins() {
+    var url = "wines";
+    const resultat = api(url);
+    return resultat;
+}
 
+function afficherTousLesVins() {
+    const resultat = obtenirTousLesVins();
+
+    resultat.done(function (data) {
+        let listDeVins = "<ul>";
+
+        // je cree un url specific pour chaque vin 
+        // lorsque je click sur un lien -> cela ajoute le winId/vinId dans mon url 
+        // ce qui me permet de recuperer cette valeur de mon url pour afficher
+        // la description du vin ou les commentaires grace au wineId 
+        data.forEach(function (vin) {
+            listDeVins +=
+                "<li> <a href=?wineId=" + vin.id + " > " + vin.name + "</a> </li>";
+        });
+
+        listDeVins += "</ul>";
+
+        $("#vins").html(listDeVins);
+    });
+}
+
+function obtenirLesCommentaireDuVin(wineId) {
+    if (wineId) {
+        var url = "wines/" + wineId + "/comments";
+        const resultat = api(url);
+        return resultat;
+    } else {
+        console.log("wineID manquant !");
+    }
+}
+
+function afficherLesCommentaires(wineId) {
+    const commentaires = obtenirLesCommentaireDuVin(wineId);
+    commentaires.done(function (data) {
+        let resultat = "<ul>";
+
+        data.forEach(function (commentaire) {
+            resultat += "<li>" + commentaire.content + "</li>";
+        });
+
+        resultat += "</ul>";
+
+        $("#commentaires-existants").html(resultat);
+    });
+}
 
 /**
  * charge le contenu de la page en fct de l id fourni
@@ -273,112 +309,109 @@ function chargercontenu(pageID) {
 $(document).ready(function () {
     $("[data-target]").click(function (event) {
         event.preventDefault();
-        var pageID = $(this).data('target');
+        var pageID = $(this).data("target");
         chargercontenu(pageID);
+    });
+
+    // lors du chargement du site je charge tous les vins
+    // et je les affiche dans la liste
+    afficherTousLesVins();
+
+    // je listen sur le bouton "commentaires"
+    // lorsque je click dessus je trigger la function afficherCommentaire
+    // qui va me charger les commentaires du vin selectionné grace au vinID / wineID dans mon url
+    $("#nav-home-commentaires").click(function (event) {
+
+        const url = new URL(window.location.href);
+        const wineId = url.searchParams.get("wineId");
+        console.log("vin selectionne -> [id]", wineId);
+        afficherLesCommentaires(wineId);
     });
 });
 
-
-
-
-
-
-
-
-
-
-
 function authentifier(login, password) {
+    const reqconnexion =
+        "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/users/authenticate";
 
-    const reqconnexion = "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/users/authenticate";
-
-    const credentials = btoa(login + ':' + password);
+    const credentials = btoa(login + ":" + password);
 
     fetch(reqconnexion, {
         method: "GET",
         headers: {
-            'content-type': 'application/json; charset=utf-8',
-            'Authorization': 'Basic ' + credentials
-        }, verbose: true
+            "content-type": "application/json; charset=utf-8",
+            Authorization: "Basic " + credentials,
+        },
+        verbose: true,
     })
-        .then(response => {
+        .then((response) => {
             if (!response.ok) {
-                throw new Error('Échec de l\'authentification avec le statut ' + response.statusText);
-
+                throw new Error(
+                    "Échec de l'authentification avec le statut " + response.statusText
+                );
             }
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             console.log(data);
             if (data.success) {
-                sessionStorage.setItem('userId', data.id);
-                sessionStorage.setItem('credentials', credentials);
+                sessionStorage.setItem("userId", data.id);
+                sessionStorage.setItem("credentials", credentials);
 
-                $('#loginStatus').html(`
+                $("#loginStatus").html(`
              <p>Vous êtes connecté. Bienvenue !</p>
           <a href="#home" onclick="chargercontenu('home')">Retour à l'accueil</a>
         `);
             }
-
-        }).catch(error => {
+        })
+        .catch((error) => {
             console.log(error);
 
-            $('#loginStatus').text(error.message);
-
-
-        })
+            $("#loginStatus").text(error.message);
+        });
 }
 
-
 /**
- * 
- * @returns {boolean} si l' utilisateur est authentifié 
+ *
+ * @returns {boolean} si l' utilisateur est authentifié
  */
 function estAuthentifie() {
-    const userId = sessionStorage.getItem('userId');
+    const userId = sessionStorage.getItem("userId");
     if (userId) {
-        console.log('Toujours connecté');
+        console.log("Toujours connecté");
         return true;
     } else {
-        console.log('Pas de session active');
+        console.log("Pas de session active");
 
         return false;
     }
 }
 
-
-
 const loginForm = document.getElementById("loginForm");
 
-
 loginForm.addEventListener("submit", function (event) {
-
     event.preventDefault();
 
-    const loginA = $('#loginlabel').val();
-    const passwordB = $('#passwordlabel').val();
+    const loginA = $("#loginlabel").val();
+    const passwordB = $("#passwordlabel").val();
     // Lancer l'action
     authentifier(loginA, passwordB);
     console.log(estAuthentifie);
 });
 
-
-
-
-function ajoutercommentaire(wineId, comment) {
-
-
-    var fullUrl = 'https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/' + wineId + '/comments'
-    var storedCredentials = sessionStorage.getItem('credentials');
-    if (comment) {
-
+function ajoutercommentaire(wineId, commentaire) {
+    var fullUrl =
+        "https://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines/" +
+        wineId +
+        "/comments";
+    var storedCredentials = sessionStorage.getItem("credentials");
+    if (commentaire) {
         const options = {
-            method: 'post',
-            body: JSON.stringify({ 'content': comment }),
+            method: "post",
+            body: JSON.stringify({ content: commentaire }),
             headers: {
-                'content-type': 'application/json; charset=utf-8',
-                'Authorization': 'Basic ' + storedCredentials
-            }
+                "content-type": "application/json; charset=utf-8",
+                Authorization: "Basic " + storedCredentials,
+            },
         };
 
         fetch(fullUrl, options)
@@ -387,86 +420,59 @@ function ajoutercommentaire(wineId, comment) {
                     console.log(response);
                     return response.json();
                 } else {
-                    throw new Error('erreur d envoi de commentaire');
+                    throw new Error("erreur d envoi de commentaire");
                 }
-
-            }).then(data => {
-
-                console.log('commentaire ajouté', data);
-
             })
-
+            .then((data) => {
+                console.log("commentaire ajouté".data);
+            });
     }
-
 }
 
-function modifiercommentaire(wineId, commentid) {
-
-
-}
-
-function supprimercommentaire(wineId, commentid) {
-
-}
+function modifiercommentaire(wineId, commentid) { }
 /**
- * gestion des comportements selon le click 
+ * gestion des comportements selon le click
  */
 
-
-
 $(document).ready(function () {
-
-    $('.btn-action').on('click', function (event) {
-        event.preventDefault();
-        console.log($(this))
-        console.log('clic detecte');
-
-        var comment = $('#commentaires div.ck.ck-editor__main > div').text()
-
-        var wineId = $(this).data('wineId');
-        // var comment = $('#comment').val().trim();
-        var action = $(this).data('action');
-
-        console.log("idvin", wineId, "comment", comment);
+    $(".btn-action").click(function () {
+        var wineId = $(this).data("wineId");
+        var commentaire = $("#comment").val().trim();
 
         if (estAuthentifie()) {
+            var action = $(this).data("action");
             switch (action) {
-                case 'ajouter':
+                case "ajouter":
                     console.log("Ajouter");
+                    ajoutercommentaire(wineId, commentaire);
 
-                    ajoutercommentaire(wineId, comment);
-                    //$('#co').empty();
                     break;
-
-                case 'modifier':
+                case "modifier":
+                    modifiercommentaire();
                     console.log("Modifier");
-                    modifiercommentaire(wineId, commentid);
 
                     break;
-                case 'supprimer':
+                case "supprimer":
+                    supprimercommentaire();
                     console.log("Supprimer");
-                    supprimercommentaire(wineId, commentid);
+                    // Logique pour Supprimer
+
                     break;
                 default:
                     console.log("Action non reconnue");
             }
         } else {
-            chargercontenu('login');
+            chargercontenu("login");
         }
     });
 });
 
-
-
-
 /**
- * deconnecte l utilisateur 
+ * deconnecte l utilisateur
  */
 function logout() {
-    sessionStorage.removeItem('userId');
-
+    sessionStorage.removeItem("userId");
 }
-
 
 /*
 window.addEventListener('beforeunload', function (e) {
