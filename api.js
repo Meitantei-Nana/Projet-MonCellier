@@ -422,7 +422,7 @@ $(document).ready(function () {
         console.log('clic detecte');
 
         var comment = $('#commentaires div.ck.ck-editor__main > div').text()
-        //console.log($('#comment').length)
+
         var wineId = $(this).data('wineId');
         // var comment = $('#comment').val().trim();
         var action = $(this).data('action');
